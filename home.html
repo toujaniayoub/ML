@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css" />
+    <link rel="stylesheet" href="assets/css/styleFeed.css">
+    <style>
+        /* Styles from your Twig file */
+        @import url("http://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap");
+        :root {
+            --color-white: white;
+            --color-light: rgb(252, 30%, 95%);
+            --color-gray: rgb(128, 128, 128);
+            --color-primary: blue;
+            --color-secondary: white;
+            --color-success: green;
+            --color-danger: red;
+            --color-dark: rgb(252, 30%, 17%);
+            --color-black: black;
+
+            --border-radius: 2em;
+            --card-border-radius: 1rem;
+            --btn-padding: 0.6rem 2rem;
+            --search-padding: 0.6rem 1rem;
+            --card-padding: 1rem;
+            --sticky-top-left: 5.4rem;
+            --sticky-top-right: -18rem;
+        }
+
+        /* Reset and global styles */
+        *,
+        *::before,
+        *::after {
+            margin: 0;
+            padding: 0;
+            outline: 0;
+            box-sizing: border-box;
+            text-decoration: none;
+            list-style: none;
+            border: none;
+        }
+        body {
+            font-family: "Poppins", sans-serif;
+            color: var(--color-dark);
+            background: rgb(242, 241, 241);
+            overflow-x: hidden;
+        }
+        .container {
+            width: 80%;
+            margin: 0 auto;
+            display: flex;
+            align-items: flex-start;
+            column-gap: 2rem;
+            position: relative;
+        }
+
+        /* Add remaining styles here as in your original file */
+    </style>
+    <title>SmartPredict</title>
+</head>
+<body>
+    <nav>
+        <div class="container">
+            <h2 class="log">SmartPredict</h2>
+            <div class="search-bar">
+                <i class="fa-solid fa-magnifying-glass"></i>
+                <input type="search" placeholder="Rechercher des Articles.">
+            </div>
+            <div class="create">
+                <div class="profile-photo">
+                    <img src="assets/img/ayoub.jpg" style="width: 50px; height: 50px;" alt="Profile Photo">
+                </div>
+                <a href="login.html" class="btn btn-primary">Log Out</a>
+            </div>
+        </div>
+    </nav>
+
+    <main>
+        <div class="container">
+            <!-- LEFT SECTION -->
+            <div class="left">
+                <a class="profile">
+                    <div class="profile-photo">
+                        <img src="assets/img/ayoub.jpg" style="width: 30px; height: 30px;" alt="Profile Photo">
+                    </div>
+                    <div class="handle" id="nameLoggedinuser">
+                        <h4>Ayoub Toujani</h4>
+                        <p class="text-muted">@ayoubtoujani</p>
+                    </div>
+                </a>
+
+                <!-- SIDEBAR -->
+                <div class="sidebar">
+                    <a class="menu-item" id="home" href="#">
+                        <span><i class="fa-solid fa-house"></i></span>
+                        <h3>Home</h3>
+                    </a>
+                    <a class="menu-item" id="profile" href="#">
+                        <span><i class="fa-solid fa-user"></i></span>
+                        <h3>My Predictions</h3>
+                    </a>
+                    <a class="menu-item" id="predict" href="/predict">
+                        <span><i class="fa-solid fa-user"></i></span>
+                        <h3>Predict Price</h3>
+                    </a>
+                    <a class="menu-item" id="predict" href="#">
+                        <span><i class="fa-solid fa-user"></i></span>
+                        <h3>Predict OS</h3>
+                    </a>
+                    
+                    
+                    
+                    
+                </div>
+            </div>
+
+            <!-- MIDDLE SECTION -->
+            <div class="content" style="width: 130%; height: auto;">
+                <h1>Welcome to SmartPredict</h1>
+                <p>This is the main content area. Replace this with your dynamic content.</p>
+            </div>
+        </div>
+    </main>
+    
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const menuItems = document.querySelectorAll('.menu-item');
+
+            function activateMenuItem(item) {
+                menuItems.forEach(otherItem => {
+                    otherItem.classList.remove('active');
+                });
+                item.classList.add('active');
+                localStorage.setItem('activeMenuItemId', item.id);
+            }
+
+            menuItems.forEach(item => {
+                item.addEventListener('click', () => {
+                    activateMenuItem(item);
+                });
+            });
+
+            const activeMenuItemId = localStorage.getItem('activeMenuItemId');
+            if (activeMenuItemId) {
+                const activeMenuItem = document.getElementById(activeMenuItemId);
+                if (activeMenuItem) {
+                    activateMenuItem(activeMenuItem);
+                }
+            }
+        });
+       
+    </script>
+</body>
+</html>
