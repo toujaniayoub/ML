@@ -198,61 +198,218 @@
     <!-- Starter Section Section -->
     <section id="starter-section" class="starter-section section">
 
-      <!-- Section Title -->
-      <div class="container section-title" data-aos="fade-up">
-        <h2>Starter Section</h2>
-        <div><span>Check Our</span> <span class="description-title">Prediction Price based on AI Precision</span></div>
-      </div><!-- End Section Title -->
+    <!-- Section Title -->
+<div class="container section-title" data-aos="fade-up">
+  <h2>Smartphone Price Prediction</h2>
+  <div><span>Check Our</span> <span class="description-title">Prediction Price based on AI Precision</span></div>
+</div><!-- End Section Title -->
 
-      <div class="container" data-aos="fade-up" id="price">
-        <div class="containerP" >
-          <h1>Smartphone Price Prediction</h1>
-          <form id="predict-form" novalidate >
-              <div>
-                  <label for="rating">Rating:</label>
-                  <input type="number" id="rating" name="rating" placeholder="Enter Rating (e.g. 89.0)" required>
-                  <div id="rating-error" class="error"></div>
-              </div>
-              
-              <div>
-                  <label for="ram_capacity">RAM Capacity (GB):</label>
-                  <input type="number" id="ram_capacity" name="ram_capacity" placeholder="Enter RAM (e.g. 12)"  required>
-                  <div id="ram-error" class="error"></div>
-              </div>
-  
-              <div>
-                  <label for="internal_memory">Internal Memory (GB):</label>
-                  <input type="number" id="internal_memory" name="internal_memory" placeholder="Enter Internal Memory (e.g. 256)"  required>
-                  <div id="memory-error" class="error"></div>
-              </div>
-  
-              <div>
-                  <label for="resolution_height">Resolution Height (px):</label>
-                  <input type="number" id="resolution_height" name="resolution_height" placeholder="Enter Resolution Height (e.g. 3216)"  required>
-                  <div id="resolution-height-error" class="error"></div>
-              </div>
-  
-              <div>
-                  <label for="resolution_width">Resolution Width (px):</label>
-                  <input type="number" id="resolution_width" name="resolution_width" placeholder="Enter Resolution Width (e.g. 1440)"  required>
-                  <div id="resolution-width-error" class="error"></div>
-              </div>
-  
-              <div>
-                  <label for="refresh_rate">Refresh Rate (Hz):</label>
-                  <input type="number" id="refresh_rate" name="refresh_rate" placeholder="Enter Refresh Rate (e.g. 120)"  required>
-                  <div id="refresh-rate-error" class="error"></div>
-              </div>
-  
-              <button type="submit">Predict Price</button>
-          </form>
-  
-  
-          <div id="prediction-result">
-              <!-- The predicted price will appear here -->
+<div class="container" data-aos="fade-up" id="price">
+  <div class="containerP">
+      <h1>Smartphone Price Prediction</h1>
+      <form id="predict-form" novalidate>
+          <!-- Brand Name Dropdown -->
+          <div>
+              <label for="brand_name">Brand Name:</label>
+              <select id="brand_name" name="brand_name" required  style="width: 100%; padding: 12px; font-size: 1rem; border: 1px solid #ccc; border-radius: 8px; transition: border 0.3s ease;">
+                  <option value="" disabled selected>Select a Brand</option>
+                  <option value="apple">Apple</option>
+                  <option value="asus">Asus</option>
+                  <option value="blackview">Blackview</option>
+                  <option value="blu">Blu</option>
+                  <option value="cat">Cat</option>
+                  <option value="cola">Cola</option>
+                  <option value="doogee">Doogee</option>
+                  <option value="duoqin">Duoqin</option>
+                  <option value="gionee">Gionee</option>
+                  <option value="google">Google</option>
+                  <option value="honor">Honor</option>
+                  <option value="huawei">Huawei</option>
+                  <option value="ikall">iKall</option>
+                  <option value="infinix">Infinix</option>
+                  <option value="iqoo">IQOO</option>
+                  <option value="itel">Itel</option>
+                  <option value="jio">Jio</option>
+                  <option value="lava">Lava</option>
+                  <option value="leeco">LeEco</option>
+                  <option value="leitz">Leitz</option>
+                  <option value="lenovo">Lenovo</option>
+                  <option value="letv">Letv</option>
+                  <option value="lg">LG</option>
+                  <option value="lyf">LYF</option>
+                  <option value="micromax">Micromax</option>
+                  <option value="motorola">Motorola</option>
+                  <option value="nokia">Nokia</option>
+                  <option value="nothing">Nothing</option>
+                  <option value="nubia">Nubia</option>
+                  <option value="oneplus">OnePlus</option>
+                  <option value="oppo">Oppo</option>
+                  <option value="oukitel">Oukitel</option>
+                  <option value="poco">Poco</option>
+                  <option value="realme">Realme</option>
+                  <option value="redmi">Redmi</option>
+                  <option value="royole">Royole</option>
+                  <option value="samsung">Samsung</option>
+                  <option value="sharp">Sharp</option>
+                  <option value="sony">Sony</option>
+                  <option value="tcl">TCL</option>
+                  <option value="tecno">Tecno</option>
+                  <option value="tesla">Tesla</option>
+                  <option value="vertu">Vertu</option>
+                  <option value="vivo">Vivo</option>
+                  <option value="xiaomi">Xiaomi</option>
+                  <option value="zte">ZTE</option>
+              </select>
+              <div id="brand-error" class="error"></div>
           </div>
+
+          <!-- Rating (percentage input) -->
+          <div>
+              <label for="rating">Rating:</label>
+              <input type="number" id="rating" name="rating" placeholder="e.g., 90 (0 to 100)" required>
+              <small id="rating-note">Enter a number between 0 and 100 (percentage)</small>
+              <div id="rating-error" class="error"></div>
+          </div>
+
+          <!-- RAM Capacity (GB) -->
+          <div>
+              <label for="ram_capacity">RAM Capacity (GB):</label>
+              <input type="number" id="ram_capacity" name="ram_capacity" placeholder="Enter RAM (e.g. 12)" required>
+              <div id="ram-error" class="error"></div>
+          </div>
+
+          <!-- Internal Memory (GB) -->
+          <div>
+              <label for="internal_memory">Internal Memory (GB):</label>
+              <input type="number" id="internal_memory" name="internal_memory" placeholder="Enter Internal Memory (e.g. 256)" required>
+              <div id="memory-error" class="error"></div>
+          </div>
+
+          <!-- Resolution Height (px) -->
+          <div>
+              <label for="resolution_height">Resolution Height (px):</label>
+              <input type="number" id="resolution_height" name="resolution_height" placeholder="Enter Resolution Height (e.g. 3216)" required>
+              <div id="resolution-height-error" class="error"></div>
+          </div>
+
+          <!-- Resolution Width (px) -->
+          <div>
+              <label for="resolution_width">Resolution Width (px):</label>
+              <input type="number" id="resolution_width" name="resolution_width" placeholder="Enter Resolution Width (e.g. 1440)" required>
+              <div id="resolution-width-error" class="error"></div>
+          </div>
+
+          <!-- Refresh Rate (Hz) -->
+          <div>
+              <label for="refresh_rate">Refresh Rate (Hz):</label>
+              <input type="number" id="refresh_rate" name="refresh_rate" placeholder="Enter Refresh Rate (e.g. 120)" required>
+              <div id="refresh-rate-error" class="error"></div>
+          </div>          
+
+          <!-- Battery Capacity (mAh) -->
+          <div>
+              <label for="battery_capacity">Battery Capacity (mAh):</label>
+              <input type="number" id="battery_capacity" name="battery_capacity" placeholder="Enter Battery Capacity (e.g. 5000)" required>
+              <div id="battery-capacity-error" class="error"></div>
+          </div>
+
+          <!-- Submit Button -->
+          <button type="submit">Predict Price</button>
+      </form>
+
+      <!-- Prediction Result -->
+      <div id="prediction-result">
+          <!-- The predicted price will appear here -->
       </div>
-          </div>
+  </div>
+</div>
+
+<script>
+ document.getElementById('predict-form').addEventListener('submit', function(event) {
+  event.preventDefault();
+  var form = new FormData(this);
+  let valid = true;
+
+  // Reset errors
+  document.querySelectorAll('.error').forEach(function(error) {
+    error.textContent = '';
+  });
+
+  // Validate each input
+  const rating = document.getElementById('rating');
+  if (isNaN(rating.value) || rating.value <= 0) {
+    document.getElementById('rating-error').textContent = 'Please enter a valid rating (as %).';
+    valid = false;
+  }
+
+  const ram = document.getElementById('ram_capacity');
+  if (isNaN(ram.value) || ram.value <= 0) {
+    document.getElementById('ram-error').textContent = 'Please enter a valid RAM capacity.';
+    valid = false;
+  }
+
+  const memory = document.getElementById('internal_memory');
+  if (isNaN(memory.value) || memory.value <= 0) {
+    document.getElementById('memory-error').textContent = 'Please enter a valid internal memory.';
+    valid = false;
+  }
+
+  const resolutionHeight = document.getElementById('resolution_height');
+  if (isNaN(resolutionHeight.value) || resolutionHeight.value <= 0) {
+    document.getElementById('resolution-height-error').textContent = 'Please enter a valid resolution height.';
+    valid = false;
+  }
+
+  const resolutionWidth = document.getElementById('resolution_width');
+  if (isNaN(resolutionWidth.value) || resolutionWidth.value <= 0) {
+    document.getElementById('resolution-width-error').textContent = 'Please enter a valid resolution width.';
+    valid = false;
+  }
+
+  const refreshRate = document.getElementById('refresh_rate');
+  if (isNaN(refreshRate.value) || refreshRate.value <= 0) {
+    document.getElementById('refresh-rate-error').textContent = 'Please enter a valid refresh rate.';
+    valid = false;
+  }
+
+  const brandName = document.getElementById('brand_name');
+  if (!brandName.value) {
+    document.getElementById('brand-name-error').textContent = 'Please select a brand.';
+    valid = false;
+  }
+
+  const battery = document.getElementById('battery_capacity');
+  if (!brandName.value) {
+    document.getElementById('battery-capacity-error').textContent = 'Please enter a valid battery capacity.';
+    valid = false;
+  } 
+
+  if (valid) {
+    fetch('/predict', {
+      method: 'POST',
+      body: form
+    })
+      .then(response => response.json())
+      .then(data => {
+        // Ensure data.price is a valid number before performing arithmetic
+        if (isNaN(data.price)) {
+          document.getElementById('prediction-result').innerHTML = 'Invalid price data.';
+          return;
+        }
+
+        // Subtract 2000 from the predicted price and remove decimals
+        let adjustedPrice = Math.floor(data.price - 2000);
+
+        // Display the adjusted price without decimals
+        document.getElementById('prediction-result').innerHTML = 'Predicted Price: ' + adjustedPrice + ' TND';
+      })
+      .catch(error => {
+        console.error('Error:', error);
+      });
+  }
+});
+
+</script>
 
     </section><!-- /Starter Section Section -->
     <div class="container section-title" data-aos="fade-up">
@@ -266,7 +423,7 @@
           <form id="predict-5g-form" novalidate>
               <div>
                   <label for="rating">Rating:</label>
-                  <input type="number" id="rating-5g" name="rating" placeholder="Enter Rating (e.g. 89.0)" required>
+                  <input type="number" id="rating-5g" name="rating" placeholder="Enter Rating" required>
                   <div id="rating-5g-error" class="error"></div>
               </div>
   
@@ -293,20 +450,286 @@
                   <input type="number" id="extended_memory_available-5g" name="extended_memory_available" placeholder="Enter 1 for Yes, 0 for No" required>
                   <div id="extended-memory-5g-error" class="error"></div>
               </div>
-  
               <button type="submit">Predict 5G Capability</button>
           </form>
   
-          <div id="5g-prediction-result">
+          <div id="5g-result"></div>
+
               <!-- The 5G prediction result will appear here -->
-          </div>
+         
       </div>
   </div>
   
   <div class="container section-title" data-aos="fade-up">
-    <h2>Starter Section</h2>
-    <div><span>Check Our</span> <span class="description-title">Prediction extended memory based on AI Precision</span></div>
-  </div><!-- End Section Title -->
+    <h2>Recommendation System</h2>
+    <div><span>Check our</span> <span class="description-title">Personalized Smartphone Recommendations</span></div>
+</div><!-- End Section Title -->
+<div class="container" data-aos="fade-up">
+  <div class="containerP">
+      <h1>Get Smartphone Recommendations</h1>
+      <form id="recommendation-form">
+          <div>
+              <label for="budget">Enter Your Budget (TND):</label>
+              <input type="number" id="budget" name="price" required>
+          </div>
+
+          <div>
+              <label for="preferred-brand">Preferred Brand:</label>
+              <input type="text" id="preferred-brand" name="brand_name">
+          </div>
+
+          <div>
+              <label for="ram">Preferred RAM Size (GB):</label>
+              <input type="number" id="ram" name="ram_capacity" required>
+          </div>
+
+          <div>
+              <label for="internal-memory">Preferred Internal Memory (GB):</label>
+              <input type="number" id="internal-memory" name="internal_memory">
+          </div>
+
+          <div>
+              <label for="screen-size">Preferred Screen Size (inches):</label>
+              <input type="number" id="screen-size" name="screen_size" step="0.1" required>
+          </div>
+
+          <button type="submit">Get Recommendations</button>
+      </form>
+
+      <div id="recommendations">
+          <h3>Recommended Smartphones:</h3>
+          <ul id="recommendations-list"></ul>
+      </div>
+  </div>
+</div><!-- End Container -->
+
+<script>
+  // Function to send the user input to the backend and display recommendations
+  document.getElementById("recommendation-form").addEventListener("submit", async (event) => {
+      event.preventDefault();
+
+      // Collect form data
+      const userPreference = {
+          price: document.getElementById("budget").value,
+          ram_capacity: document.getElementById("ram").value,
+          screen_size: document.getElementById("screen-size").value,
+          brand_name: document.getElementById("preferred-brand").value,
+          internal_memory: document.getElementById("internal-memory").value
+      };
+
+      // Send data to backend via API
+      const response = await fetch('http://127.0.0.1:5000/recommend', {
+          method: 'POST',
+          headers: {
+              'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(userPreference)
+      });
+
+      const recommendations = await response.json();
+
+      // Display recommendations on the frontend
+      const recommendationsList = document.getElementById("recommendations-list");
+      recommendationsList.innerHTML = "";  // Clear previous recommendations
+
+      recommendations.forEach(phone => {
+          const listItem = document.createElement("li");
+          listItem.textContent = `${phone.brand_name} - Price: ${phone.price}, RAM: ${phone.ram_capacity}GB, Memory: ${phone.internal_memory}GB, Screen: ${phone.screen_size}"`;
+          recommendationsList.appendChild(listItem);
+      });
+  });
+</script>
+
+<!-- Section Title -->
+<div class="container section-title" data-aos="fade-up">
+  <h2>Starter Section</h2>
+  <div>
+    <span>Check Our</span>
+    <span class="description-title">Gaming Performance Score</span>
+  </div>
+</div><!-- End Section Title -->
+
+<!-- Form for Gaming Phone Prediction -->
+<div class="container" data-aos="fade-up" id="gaming-prediction">
+  <div class="containerP">
+    <h1>Gaming Phone Predictor</h1>
+    <form id="predictGamingForm" novalidate>
+      <!-- Rating -->
+      <div>
+        <label for="rating">Rating:</label>
+        <input type="text" id="rating" name="rating"><br><br>
+      </div>
+
+      <!-- RAM Capacity -->
+      <div>
+        <label for="ram_capacity">RAM Capacity:</label>
+        <input type="text" id="ram_capacity" name="ram_capacity"><br><br>
+      </div>
+
+      <!-- Battery Capacity -->
+      <div>
+        <label for="battery_capacity">Battery Capacity:</label>
+        <input type="text" id="battery_capacity" name="battery_capacity"><br><br>
+      </div>
+
+      <!-- Screen Size -->
+      <div>
+        <label for="screen_size">Screen Size:</label>
+        <input type="text" id="screen_size" name="screen_size"><br><br>
+      </div>
+
+      <!-- Refresh Rate -->
+      <div>
+        <label for="refresh_rate">Refresh Rate:</label>
+        <input type="text" id="refresh_rate" name="refresh_rate"><br><br>
+      </div>
+
+      <!-- Number of Cores -->
+      <div>
+        <label for="num_cores">Number of Cores:</label>
+        <input type="text" id="num_cores" name="num_cores"><br><br>
+      </div>
+
+      <button type="submit">Predict Gaming Phone</button>
+    </form>
+
+    <!-- Prediction Result -->
+    <div id="result"></div>
+  </div>
+</div><!-- End Container -->
+<!-- Updated HTML -->
+<div class="container section-title" data-aos="fade-up">
+  <h2>Starter Section</h2>
+  <div>
+    <span>Check Our</span>
+    <span class="description-title">Prediction extended_memory_available based on AI Precision</span>
+  </div>
+</div>
+
+<!-- Form for Prediction -->
+<div class="container" data-aos="fade-up" id="5g-prediction">
+  <div class="containerP">
+    <h1>Extended-memory Prediction</h1>
+    <form id="predict-extended_memory-form" novalidate>
+      <!-- RAM Capacity -->
+      <div>
+        <label for="ram_capacity">RAM Capacity (GB):</label>
+        <input type="number" id="ram_capacity" name="ram_capacity" placeholder="Enter RAM (e.g. 12)" required>
+        <div id="ram-error-ex" class="error"></div>
+      </div>
+
+      <!-- Battery Capacity -->
+      <div>
+        <label for="battery_capacity">Battery Capacity (mAh):</label>
+        <input type="number" id="battery_capacity" name="battery_capacity" placeholder="Enter Battery Capacity (e.g. 5000)" required>
+        <div id="battery-capacity-error-ex" class="error"></div>
+      </div>
+
+      <!-- Internal Memory -->
+      <div>
+        <label for="internal_memory">Internal Memory (GB):</label>
+        <input type="number" id="internal_memory" name="internal_memory" placeholder="Enter Internal Memory (e.g. 256)" required>
+        <div id="memory-error-ex" class="error"></div>
+      </div>
+
+      <!-- Processor -->
+      <div>
+        <label for="processor">Processor Brand:</label>
+        <input type="text" id="processor" name="processor" placeholder="Enter Processor (e.g. Snapdragon)" required>
+        <div id="processor-error-ex" class="error"></div>
+      </div>
+
+      <!-- Price -->
+      <div>
+        <label for="price">Price (TND):</label>
+        <input type="number" id="price" name="price" placeholder="Enter Price (e.g. 1000)" required>
+        <div id="price-error-ex" class="error"></div>
+      </div>
+
+      <button type="submit">Predict extended_memory_available</button>
+    </form>
+
+    <!-- Prediction Result -->
+    <div id="extended-memory-result"></div>
+  </div>
+</div>
+
+<!-- Updated JavaScript -->
+<script>
+document.getElementById("predict-extended-memory-form").addEventListener("submit", async function (event) {
+    event.preventDefault();
+    console.log("Form submission prevented!");
+    // Clear previous errors
+    document.querySelectorAll(".error").forEach(el => el.textContent = "");
+
+    // Retrieve form inputs
+    const ramCapacity = document.getElementById("ram_capacity").value;
+    const batteryCapacity = document.getElementById("battery_capacity").value;
+    const internalMemory = document.getElementById("internal_memory").value;
+    const processorBrand = document.getElementById("processor_brand").value;
+    const price = document.getElementById("price").value;
+
+    // Validate inputs
+    let isValid = true;
+
+    if (!ramCapacity || ramCapacity <= 0) {
+        document.getElementById("ram-error").textContent = "Please enter a valid RAM capacity.";
+        isValid = false;
+    }
+
+    if (!batteryCapacity || batteryCapacity <= 0) {
+        document.getElementById("battery-error").textContent = "Please enter a valid battery capacity.";
+        isValid = false;
+    }
+
+    if (!internalMemory || internalMemory <= 0) {
+        document.getElementById("memory-error").textContent = "Please enter a valid internal memory.";
+        isValid = false;
+    }
+
+    if (!processorBrand || processorBrand.trim() === "") {
+        document.getElementById("processor-error").textContent = "Please enter a processor brand.";
+        isValid = false;
+    }
+
+    if (!price || price <= 0) {
+        document.getElementById("price-error").textContent = "Please enter a valid price.";
+        isValid = false;
+    }
+
+    if (!isValid) return;
+
+    // Prepare form data
+    const formData = new FormData();
+    formData.append("ram_capacity", ramCapacity);
+    formData.append("battery_capacity", batteryCapacity);
+    formData.append("internal_memory", internalMemory);
+    formData.append("processor_brand", processorBrand);
+    formData.append("price", price);
+
+    try {
+        // Call API
+        const response = await fetch("/predict-extended-memory", {
+            method: "POST",
+            body: formData,
+        });
+
+        const result = await response.json();
+
+        if (response.ok) {
+            document.getElementById("extended-memory-result").textContent =
+                `Prediction: ${result.extended_memory_available ? "Yes" : "No"}`;
+        } else {
+            console.error('API Error:', result.error);  // Log error to console
+            document.getElementById("extended-memory-result").textContent = `Error: ${result.error}`;
+        }
+    } catch (error) {
+        console.error('Request Error:', error);  // Log request error to console
+        document.getElementById("extended-memory-result").textContent = `Error: ${error.message}`;
+    }
+});
+
+</script>
 
   </main>
 
@@ -455,64 +878,41 @@
         }
     });
 </script>
+
 <script>
-  document.getElementById('predict-5g-form').addEventListener('submit', function(event) {
-      event.preventDefault();
-      var form = new FormData(this);
-      let valid = true;
+  document.getElementById('predictGamingForm').addEventListener('submit', function(event) {
+    event.preventDefault();
+    
+    let formData = new FormData(this);
 
-      // Reset errors
-      document.querySelectorAll('.error').forEach(function(error) {
-          error.textContent = '';
-      });
+    fetch('/predict_gaming_phone', {
+        method: 'POST',
+        body: formData
+    })
+    .then(response => response.json())
+    .then(data => {
+        // Debug: Check the data returned by the server
+        console.log(data);
 
-      // Validate each input
-      const rating = document.getElementById('rating-5g');
-      if (isNaN(rating.value) || rating.value <= 0) {
-          document.getElementById('rating-5g-error').textContent = 'Please enter a valid rating.';
-          valid = false;
-      }
-
-      const ram = document.getElementById('ram_capacity-5g');
-      if (isNaN(ram.value) || ram.value <= 0) {
-          document.getElementById('ram-5g-error').textContent = 'Please enter a valid RAM capacity.';
-          valid = false;
-      }
-
-      const resolutionHeight = document.getElementById('resolution_height-5g');
-      if (isNaN(resolutionHeight.value) || resolutionHeight.value <= 0) {
-          document.getElementById('resolution-height-5g-error').textContent = 'Please enter a valid resolution height.';
-          valid = false;
-      }
-
-      const refreshRate = document.getElementById('refresh_rate-5g');
-      if (isNaN(refreshRate.value) || refreshRate.value <= 0) {
-          document.getElementById('refresh-rate-5g-error').textContent = 'Please enter a valid refresh rate.';
-          valid = false;
-      }
-
-      const extendedMemory = document.getElementById('extended_memory_available-5g');
-      if (extendedMemory.value !== '0' && extendedMemory.value !== '1') {
-          document.getElementById('extended-memory-5g-error').textContent = 'Please enter 1 for Yes or 0 for No.';
-          valid = false;
-      }
-
-      if (valid) {
-          fetch('/predict_5g', {
-              method: 'POST',
-              body: form
-          })
-          .then(response => response.json())
-          .then(data => {
-              document.getElementById('5g-prediction-result').innerHTML = '5G Capability: ' + data.has_5g;
-          })
-          .catch(error => {
-              console.error('Error:', error);
-          });
-      }
-  });
+        if (data.error) {
+            document.getElementById('result').textContent = 'Error: ' + data.error;
+        } else {
+            // Ensure that the gaming score and the phone status are present
+            if (data.gaming_score !== undefined && data.is_gaming_phone !== undefined) {
+                document.getElementById('result').innerHTML = `
+                    <p>Gaming Score: ${data.gaming_score}</p>
+                    <p>This phone ${data.is_gaming_phone ? 'is' : 'is not'} a gaming phone.</p>
+                `;
+            } else {
+                document.getElementById('result').textContent = 'Error: Invalid response from server';
+            }
+        }
+    })
+    .catch(error => {
+        document.getElementById('result').textContent = 'Error: ' + error;
+    });
+});
 </script>
-
 
 </body>
 
