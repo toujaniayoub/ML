@@ -266,6 +266,35 @@ button:hover {
             
         }
   </style>
+  <style>
+    /* Prediction Result Container Styling */
+    #prediction-result {
+      padding: 20px;
+      margin-top: 20px;
+      font-size: 1.3em;
+      font-weight: bold;
+      text-align: center;
+      border-radius: 10px;
+      background-color: #f8f8f8;
+      color: #2c3e50;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      border: 2px solid #ddd;
+      transition: background-color 0.3s ease;
+    }
+  
+    /* Success Message Styling */
+    #prediction-result.success {
+      background-color: #28a745;
+      color: white;
+    }
+  
+    /* Error Message Styling */
+    #prediction-result.error {
+      background-color: #e74c3c;
+      color: white;
+    }
+  </style>
+  
 </head>
 
 <body class="starter-page-page">
@@ -322,6 +351,7 @@ button:hover {
     <!-- Starter Section Section -->
     <section id="starter-section" class="starter-section section">
 
+<!-- End Dynamic Prediction Live Section -->
     <!-- Section Title -->
 <div class="container section-title" data-aos="fade-up">
   <h2>Smartphone Price Prediction</h2>
@@ -391,7 +421,6 @@ button:hover {
           <div>
               <label for="rating">Rating:</label>
               <input type="number" id="rating" name="rating" placeholder="e.g., 90 (0 to 100)" required>
-              <small id="rating-note">Enter a number between 0 and 100 (percentage)</small>
               <div id="rating-error" class="error"></div>
           </div>
 
@@ -440,79 +469,91 @@ button:hover {
           <!-- Submit Button -->
           <button type="submit">Predict Price</button>
       </form>
-
+    
       <!-- Prediction Result -->
       <div id="prediction-result">
           <!-- The predicted price will appear here -->
       </div>
   </div>
 </div>
-
 <script>
- document.getElementById('predict-form').addEventListener('submit', function(event) {
-  event.preventDefault();
-  var form = new FormData(this);
-  let valid = true;
+  document.getElementById('predict-form').addEventListener('submit', function(event) {
+    event.preventDefault();
+    var form = new FormData(this);
+    let valid = true;
 
-  // Reset errors
-  document.querySelectorAll('.error').forEach(function(error) {
-    error.textContent = '';
-  });
+    // Reset errors
+    document.querySelectorAll('.error').forEach(function(error) {
+      error.textContent = '';
+    });
 
-  // Validate each input
-  const rating = document.getElementById('rating');
-  if (isNaN(rating.value) || rating.value <= 0) {
-    document.getElementById('rating-error').textContent = 'Please enter a valid rating (as %).';
-    valid = false;
-  }
+    // Validate rating input
+    const rating = document.getElementById('rating').value;
+    const ratingErrorDiv = document.getElementById('rating-error');
+    if (rating < 0 || rating > 100) {
+      ratingErrorDiv.textContent = 'Rating must be between 0 and 100.';
+      document.getElementById('rating').style.borderColor = 'red';
+      valid = false;
+    } else {
+      ratingErrorDiv.textContent = '';
+      document.getElementById('rating').style.borderColor = 'green';
+    }
 
-  const ram = document.getElementById('ram_capacity');
-  if (isNaN(ram.value) || ram.value <= 0) {
-    document.getElementById('ram-error').textContent = 'Please enter a valid RAM capacity.';
-    valid = false;
-  }
+    // Validate RAM capacity
+    const ram = document.getElementById('ram_capacity');
+    if (isNaN(ram.value) || ram.value <= 0) {
+      document.getElementById('ram-error').textContent = 'Please enter a valid RAM capacity.';
+      valid = false;
+    }
 
-  const memory = document.getElementById('internal_memory');
-  if (isNaN(memory.value) || memory.value <= 0) {
-    document.getElementById('memory-error').textContent = 'Please enter a valid internal memory.';
-    valid = false;
-  }
+    // Validate internal memory
+    const memory = document.getElementById('internal_memory');
+    if (isNaN(memory.value) || memory.value <= 0) {
+      document.getElementById('memory-error').textContent = 'Please enter a valid internal memory.';
+      valid = false;
+    }
 
-  const resolutionHeight = document.getElementById('resolution_height');
-  if (isNaN(resolutionHeight.value) || resolutionHeight.value <= 0) {
-    document.getElementById('resolution-height-error').textContent = 'Please enter a valid resolution height.';
-    valid = false;
-  }
+    // Validate resolution height
+    const resolutionHeight = document.getElementById('resolution_height');
+    if (isNaN(resolutionHeight.value) || resolutionHeight.value <= 0) {
+      document.getElementById('resolution-height-error').textContent = 'Please enter a valid resolution height.';
+      valid = false;
+    }
 
-  const resolutionWidth = document.getElementById('resolution_width');
-  if (isNaN(resolutionWidth.value) || resolutionWidth.value <= 0) {
-    document.getElementById('resolution-width-error').textContent = 'Please enter a valid resolution width.';
-    valid = false;
-  }
+    // Validate resolution width
+    const resolutionWidth = document.getElementById('resolution_width');
+    if (isNaN(resolutionWidth.value) || resolutionWidth.value <= 0) {
+      document.getElementById('resolution-width-error').textContent = 'Please enter a valid resolution width.';
+      valid = false;
+    }
 
-  const refreshRate = document.getElementById('refresh_rate');
-  if (isNaN(refreshRate.value) || refreshRate.value <= 0) {
-    document.getElementById('refresh-rate-error').textContent = 'Please enter a valid refresh rate.';
-    valid = false;
-  }
+    // Validate refresh rate
+    const refreshRate = document.getElementById('refresh_rate');
+    if (isNaN(refreshRate.value) || refreshRate.value <= 0) {
+      document.getElementById('refresh-rate-error').textContent = 'Please enter a valid refresh rate.';
+      valid = false;
+    }
 
-  const brandName = document.getElementById('brand_name');
-  if (!brandName.value) {
-    document.getElementById('brand-name-error').textContent = 'Please select a brand.';
-    valid = false;
-  }
+    // Validate brand name
+    const brandName = document.getElementById('brand_name');
+    if (!brandName.value) {
+      document.getElementById('brand-name-error').textContent = 'Please select a brand.';
+      valid = false;
+    }
 
-  const battery = document.getElementById('battery_capacity');
-  if (!brandName.value) {
-    document.getElementById('battery-capacity-error').textContent = 'Please enter a valid battery capacity.';
-    valid = false;
-  } 
+    // Validate battery capacity
+    const battery = document.getElementById('battery_capacity');
+    if (isNaN(battery.value) || battery.value <= 0) {
+      document.getElementById('battery-capacity-error').textContent = 'Please enter a valid battery capacity.';
+      valid = false;
+    }
 
-  if (valid) {
-    fetch('/predict', {
-      method: 'POST',
-      body: form
-    })
+    // If all validations pass, submit the form data
+    if (valid) {
+      fetch('/predict', {
+        method: 'POST',
+        body: form
+      })
       .then(response => response.json())
       .then(data => {
         // Ensure data.price is a valid number before performing arithmetic
@@ -521,19 +562,19 @@ button:hover {
           return;
         }
 
-        // Subtract 2000 from the predicted price and remove decimals
-       // let adjustedPrice = Math.floor(data.price - 2000);
+        // Subtract 2700 from the predicted price and remove decimals
+       // let adjustedPrice = Math.floor(data.price - 2700);
 
         // Display the adjusted price without decimals
-        document.getElementById('prediction-result').innerHTML = 'Predicted Price: ' + data.price  + ' TND';
+        document.getElementById('prediction-result').innerHTML = 'Predicted Price: ' + data.price + ' TND';
       })
       .catch(error => {
         console.error('Error:', error);
       });
-  }
-});
-
+    }
+  });
 </script>
+
 <!-- Updated HTML -->
 <div class="container section-title" data-aos="fade-up">
   <h2>Starter Section</h2>
@@ -961,69 +1002,7 @@ const price = document.getElementById("price-ex").value;
 
   <!-- Main JS File -->
   <script src="assets/js/main.js"></script>
-  <script>
-    document.getElementById('predict-form').addEventListener('submit', function(event) {
-        event.preventDefault();
-        var form = new FormData(this);
-        let valid = true;
-
-        // Reset errors
-        document.querySelectorAll('.error').forEach(function(error) {
-            error.textContent = '';
-        });
-
-        // Validate each input
-        const rating = document.getElementById('rating');
-        if (isNaN(rating.value) || rating.value <= 0) {
-            document.getElementById('rating-error').textContent = 'Please enter a valid rating.';
-            valid = false;
-        }
-
-        const ram = document.getElementById('ram_capacity');
-        if (isNaN(ram.value) || ram.value <= 0) {
-            document.getElementById('ram-error').textContent = 'Please enter a valid RAM capacity.';
-            valid = false;
-        }
-
-        const memory = document.getElementById('internal_memory');
-        if (isNaN(memory.value) || memory.value <= 0) {
-            document.getElementById('memory-error').textContent = 'Please enter a valid internal memory.';
-            valid = false;
-        }
-
-        const resolutionHeight = document.getElementById('resolution_height');
-        if (isNaN(resolutionHeight.value) || resolutionHeight.value <= 0) {
-            document.getElementById('resolution-height-error').textContent = 'Please enter a valid resolution height.';
-            valid = false;
-        }
-
-        const resolutionWidth = document.getElementById('resolution_width');
-        if (isNaN(resolutionWidth.value) || resolutionWidth.value <= 0) {
-            document.getElementById('resolution-width-error').textContent = 'Please enter a valid resolution width.';
-            valid = false;
-        }
-
-        const refreshRate = document.getElementById('refresh_rate');
-        if (isNaN(refreshRate.value) || refreshRate.value <= 0) {
-            document.getElementById('refresh-rate-error').textContent = 'Please enter a valid refresh rate.';
-            valid = false;
-        }
-
-        if (valid) {
-            fetch('/predict', {
-                method: 'POST',
-                body: form
-            })
-            .then(response => response.json())
-            .then(data => {
-                document.getElementById('prediction-result').innerHTML = 'Predicted Price: ' + data.price + ' TND';
-            })
-            .catch(error => {
-                console.error('Error:', error);
-            });
-        }
-    });
-</script>
+ 
 
 </body>
 

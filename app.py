@@ -1,12 +1,27 @@
-from flask import Flask, render_template, request, jsonify
+from flask import Flask, render_template, request, redirect, url_for, session, flash, jsonify, json, Response, make_response
+from flask_login import LoginManager, UserMixin, login_user, login_required, logout_user, current_user
+from werkzeug.security import generate_password_hash, check_password_hash
 import joblib
 import numpy as np  # Import numpy here
 import pandas as pd  # Import pandas here
 from sklearn.preprocessing import StandardScaler
 from sklearn.metrics.pairwise import cosine_similarity
 import pickle
+import json
+from flask import Flask, request, jsonify
+
 
 app = Flask(__name__, template_folder='.',static_folder='assets')
+
+
+app.secret_key='secretkey'
+
+
+# Dummy User database (in a real app, you should use a proper database)
+# Sample user credentials (in a real app, use a database)
+VALID_USERNAME = 'ayoubtoujani'
+VALID_PASSWORD = '123'
+
 
 # Load the pre-trained XGBoost model
 with open("model/xgboost_5g_model.pkl", "rb") as model_file:
@@ -18,6 +33,28 @@ model = joblib.load('model/smartphone_price_model_new_last.pkl')
 # Charger le modèle et l'encodeur
 model_extended_memory = joblib.load('model/random_forest_model.pkl')
 encoder = joblib.load('model/encoder.pkl')
+@app.route('/login', methods=['GET', 'POST'])  # Handle both GET and POST
+def login():
+    if request.method == 'POST':
+        username = request.form.get('username')
+        password = request.form.get('password')
+
+        # Check if the credentials are correct
+        if username == VALID_USERNAME and password == VALID_PASSWORD:
+            session['logged_in'] = True  # Set session to track login state
+            flash('Login successful!', 'success')  # Flash success message
+            return redirect(url_for('home'))  # Redirect to home after successful login
+        else:
+            flash('Invalid credentials, please try again.', 'danger')  # Flash error message
+            return redirect(url_for('index'))  # Redirect to login page on failure
+
+    # If it's a GET request, render the login form
+    return render_template('login.html')
+    
+@app.route('/logout')
+def logout():
+    logout_user()
+    return redirect(url_for('index'))
 
 @app.route('/')
 def index():
@@ -25,16 +62,16 @@ def index():
 
 @app.route('/starter-page')
 def home():
-    return render_template('starter-page.html')
+    if not session.get('logged_in'):
+        flash('You must log in first.', 'danger')
+        return redirect(url_for('index'))  # Redirect to login page if not logged in
+    return render_template('starter-page.html')  
 # Route to handle prediction
 # Load the brand names and their price adjustments from CSV
 brand_df = pd.read_csv('brand_name.csv')  # Ensure your CSV is saved as 'brand_name.csv'
 brand_price_adjustments = dict(zip(brand_df['brand_name'].str.lower(), brand_df['price_adjustment']))
 
 
-# Load the brand names and their price adjustments from CSV
-brand_df = pd.read_csv('brand_name.csv')  # Ensure your CSV is saved as 'brand_name.csv'
-brand_price_adjustments = dict(zip(brand_df['brand_name'].str.lower(), brand_df['price_adjustment']))
 
 @app.route('/predict', methods=['POST'])
 def predict():
@@ -72,8 +109,8 @@ def predict():
         print(f"Brand {brand_name} not found in adjustments!")
         predicted_price = model.predict(input_data)[0]
     
-    # Return the predicted price as a JSON response
-    return jsonify({'price': predicted_price})
+    # Return the predicted price as a JSON response and round to 2 decimal places
+    return jsonify({'price': round(predicted_price, 2)-3000})
 # Function to encode the brand name (example, you need to adapt this to how you encoded it)
 def encode_brand_name(brand_name):
     # Example encoding (you can use LabelEncoder or another method you used during training)
@@ -236,6 +273,34 @@ def predicthas5g():
         # Return the result as JSON
         return jsonify({"prediction": result})
 
+    except Exception as e:
+        return jsonify({"error": str(e)}), 400
+
+# Sample prediction logic
+def predict_price(features):
+    # Example: weights for demo purposes
+    weights = [200, 0.8, 1.5, 1.2, 0.5, 0.3]
+    return np.dot(features, weights) + 50
+
+@app.route('/predict-preview', methods=['POST'])
+def predict_preview():
+    try:
+        brand = request.form.get('brand_name', '')
+        rating = float(request.form.get('rating', 0))
+        ram = float(request.form.get('ram_capacity', 0))
+        internal_memory = float(request.form.get('internal_memory', 0))
+        resolution_height = float(request.form.get('resolution_height', 0))
+        resolution_width = float(request.form.get('resolution_width', 0))
+        refresh_rate = float(request.form.get('refresh_rate', 0))
+        battery_capacity = float(request.form.get('battery_capacity', 0))
+
+        # Compute derived features (example: PPI)
+        ppi = ((resolution_width ** 2 + resolution_height ** 2) ** 0.5) / 6.5  # Assuming a 6.5" display
+
+        features = [rating, ram, internal_memory, ppi, refresh_rate, battery_capacity]
+        price = predict_price(features)
+        
+        return jsonify({"price": round(price, 2)})
     except Exception as e:
         return jsonify({"error": str(e)}), 400
 
