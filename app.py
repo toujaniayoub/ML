@@ -4,8 +4,13 @@ import numpy as np  # Import numpy here
 import pandas as pd  # Import pandas here
 from sklearn.preprocessing import StandardScaler
 from sklearn.metrics.pairwise import cosine_similarity
+import pickle
 
 app = Flask(__name__, template_folder='.',static_folder='assets')
+
+# Load the pre-trained XGBoost model
+with open("model/xgboost_5g_model.pkl", "rb") as model_file:
+    modelfiveg = pickle.load(model_file)
 
 # Load the pre-trained model
 model = joblib.load('model/smartphone_price_model_new_last.pkl')
@@ -125,72 +130,43 @@ def encode_brand_name(brand_name):
     return encoding_map.get(brand_name.lower(), -1)  # Return -1 if brand is not recognized
 
 
-# Load and preprocess the dataset (same as before)
-data = {
-    'brand_name': ['oneplus', 'samsung', 'motorola', 'realme', 'xiaomi', 'apple', 'infinix'],
-    'price': [6800, 5200, 5600, 5600, 5990, 9000, 7000],
-    'ram_capacity': [12, 8, 8, 8, 8, 8, 6],
-    'internal_memory': [256, 64, 128, 128, 256, 256, 128],
-    'screen_size': [6.7, 6.5, 6.6, 6.7, 6.67, 6.1, 6.5]
-}
+df = pd.read_csv('data.csv')  # Ensure the file exists
+# Convert the dataframe to a list of dictionaries
+smartphones = df.to_dict(orient="records")
 
-df = pd.DataFrame(data)
-numerical_features = ['price', 'ram_capacity', 'internal_memory', 'screen_size']
-scaler = StandardScaler()
-df[numerical_features] = scaler.fit_transform(df[numerical_features])
-
-# Apply one-hot encoding for brand_name
-df = pd.get_dummies(df, columns=['brand_name'], drop_first=True)
-@app.route('/recommend', methods=['POST'])
-def recommend():
+@app.route('/recommendations', methods=['POST'])
+def get_recommendations():
     # Get user preferences from the request
-    user_preference = request.json
+    preferences = request.get_json()
+    budget = int(preferences.get('price', 0))
+    ram = int(preferences.get('ram_capacity', 0))
+    internal_memory = int(preferences.get('internal_memory', 0))
+    screen_size = float(preferences.get('screen_size', 0))
 
-    # Normalize the user preferences
-    user_vector = pd.DataFrame([[
-        user_preference['price'],
-        user_preference['ram_capacity'],
-        user_preference['internal_memory'],
-        user_preference['screen_size']
-    ]], columns=numerical_features)
+    # Filter smartphones based on preferences
+    filtered_smartphones = [
+        phone for phone in smartphones
+        if phone['price'] <= budget and
+           phone['ram_capacity'] >= ram and
+           (internal_memory == 0 or phone['internal_memory'] >= internal_memory) and
+           phone['screen_size'] >= screen_size and 
+           phone['brand_name'].strip().lower() == preferences.get('brand_name', phone['brand_name']).strip().lower()
+    ]
 
-    user_vector = scaler.transform(user_vector)
+    # Sort smartphones by RAM, internal memory, screen size, and price
+    sorted_smartphones = sorted(
+        filtered_smartphones,
+        key=lambda x: (-x['ram_capacity'], -x['internal_memory'], -x['screen_size'], x['price'])
+    )
 
-    # One-hot encode the user input for brand preference (assuming user prefers samsung)
-    user_brand = user_preference.get('brand_name', '')
-    
-    # Make sure the user vector matches the columns of the original df
-    user_vector = pd.DataFrame(user_vector, columns=numerical_features)
-    
-    # Add the brand column to the user vector if the brand is specified
-    if user_brand:
-        # Create a column for the brand with 1 if the user prefers the given brand, else 0
-        for brand in df.columns:
-            if brand.startswith(user_brand.lower()):
-                user_vector[brand] = 1
-            else:
-                user_vector[brand] = 0
-    else:
-        # If no brand is specified, assume user doesn't have a preference
-        for brand in df.columns:
-            if brand.startswith('brand_name'):
-                user_vector[brand] = 0
+    # Add rankings to the sorted list
+    ranked_smartphones = [
+        {**phone, "rank": idx + 1} for idx, phone in enumerate(sorted_smartphones)
+    ]
 
-    # Reorder the columns in user_vector to match df's columns
-    user_vector = user_vector[df.columns.difference(['price'])]
+    # Return the ranked list as a JSON response
+    return jsonify(ranked_smartphones)
 
-    # Calculate cosine similarity
-    cos_sim = cosine_similarity(user_vector, df.drop(columns=['price']))
-    
-    # Add the similarity column to the DataFrame
-    df['similarity'] = cos_sim.flatten()
-
-    # Sort the phones by similarity and price
-    df_sorted = df.sort_values(by=['similarity', 'price'], ascending=[False, True])
-
-    # Return recommendations as a list of phones
-    recommendations = df_sorted[['brand_name', 'price', 'ram_capacity', 'internal_memory', 'screen_size', 'similarity']].to_dict(orient='records')
-    return jsonify(recommendations)
 
 @app.route('/predict-extended-memory', methods=['POST'])
 def predict_extended_memory():
@@ -201,6 +177,8 @@ def predict_extended_memory():
         internal_memory = request.form.get("internal_memory", type=float)
         processor_brand = request.form.get("processor_brand", type=str)
         price = request.form.get("price", type=float)
+
+        print(f"Received data: {ram_capacity}, {battery_capacity}, {internal_memory}, {processor_brand}, {price}")
 
         if None in [ram_capacity, battery_capacity, internal_memory, processor_brand, price]:
             return jsonify({"error": "All input fields must be provided and valid."}), 400
@@ -216,7 +194,7 @@ def predict_extended_memory():
         features = np.array([[price, ram_capacity, internal_memory, battery_capacity, processor_encoded]])
 
         # Make prediction
-        prediction = model.predict(features)
+        prediction = model_extended_memory.predict(features)
         prediction_bool = bool(prediction[0])  # Convert to Python boolean
 
         return jsonify({"extended_memory_available": prediction_bool})
@@ -225,6 +203,42 @@ def predict_extended_memory():
         # Log and handle exceptions
         print(f"Prediction request failed: {e}")  # Log the error
         return jsonify({"error": f"Prediction failed: {str(e)}"}), 500
+    
+@app.route('/predict-has5g', methods=['GET'])
+def predicthas5g():
+    try:
+        # Get the query parameters from the URL
+        rating = request.args.get('rating', type=float)
+        ram_capacity = request.args.get('ram_capacity', type=float)
+        refresh_rate = request.args.get('refresh_rate', type=float)
+        resolution_height = request.args.get('resolution_height', type=float)
+        extended_memory_available = request.args.get('extended_memory_available', type=int)
+
+        # Check if all required parameters are present
+        if None in [rating, ram_capacity, refresh_rate, resolution_height, extended_memory_available]:
+            return jsonify({"error": "Missing required parameters."}), 400
+
+        # Create a DataFrame with the features to pass to the model
+        input_data = pd.DataFrame([{
+            'rating': rating,
+            'ram_capacity': ram_capacity,
+            'refresh_rate': refresh_rate,
+            'extended_memory_available': extended_memory_available,
+            'resolution_height': resolution_height
+        }])
+
+        # Make prediction using the trained model
+        prediction =  modelfiveg.predict(input_data)
+
+        # Map the prediction to the corresponding result (0 or 1)
+        result = "5G" if prediction[0] == 1 else "No 5G"
+
+        # Return the result as JSON
+        return jsonify({"prediction": result})
+
+    except Exception as e:
+        return jsonify({"error": str(e)}), 400
+
 
 # Run the app
 if __name__ == '__main__':

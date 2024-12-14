@@ -35,6 +35,141 @@
   * License: https://bootstrapmade.com/license/
   ======================================================== -->
   <style>
+
+
+
+/* Style for the result */
+#5g-result {
+    margin-top: 20px;
+    font-size: 20px;
+    font-weight: bold;
+    color: #333;
+    background-color: #f5f5f5;
+    padding: 20px;
+    border-radius: 5px;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+#5g-result strong {
+    font-size: 26px;
+    color: #ff5722; /* Orange color for the prediction */
+}
+
+#5g-result.green {
+    background-color: #dff0d8;
+    color: #3c763d;
+}
+
+#5g-result.red {
+    background-color: #f2dede;
+    color: #a94442;
+}
+
+
+
+input {
+    width: 100%;
+    padding: 10px;
+    margin: 10px 0;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+}
+
+button {
+    padding: 10px 20px;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+button:hover {
+    background-color: #45a049;
+}
+
+/* Container for recommendations */
+.recommendations-container {
+  margin-top: 30px;
+  background-color: #f9f9f9;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  max-height: 300px; /* Set a max height for the container */
+  overflow-y: auto; /* Enable scrolling if content exceeds the height */
+}
+
+/* Style for the list */
+.recommendations-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+/* Style for list items */
+.recommendations-list li {
+  background-color: #fff;
+  border-radius: 8px;
+  margin-bottom: 15px;
+  padding: 15px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+/* Hover effect for list items */
+.recommendations-list li:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+}
+
+/* Style for phone information */
+.recommendations-list li .phone-info {
+  font-size: 16px;
+  color: #333;
+  flex: 2; /* Allow phone info to take more space */
+}
+
+/* Style for phone price */
+.recommendations-list li .phone-price {
+  font-size: 18px;
+  color: #333;
+  font-weight: bold;
+  flex: 1; /* Allocate space for the price */
+  text-align: right;
+}
+
+/* Style for rank badge */
+.recommendations-list li .phone-rank {
+  background-color: #4CAF50;
+  color: #fff;
+  padding: 5px 10px;
+  border-radius: 20px;
+  font-weight: bold;
+  margin-right: 10px;
+}
+
+/* Style for the button */
+button {
+  background-color: #4CAF50;
+  color: white;
+  padding: 12px 20px;
+  font-size: 16px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  margin-top: 20px;
+  transition: background-color 0.3s ease;
+}
+
+button:hover {
+  background-color: #45a049;
+}
+
+
      body {
             font-family: 'Arial', sans-serif;
             background-color: #f7f9fc;
@@ -44,12 +179,15 @@
 
         .containerP {
             max-width: 800px;
-            max-height: 1000px;
+            max-height: 1300px;
             margin: 50px auto;
             padding: 20px;
             background-color: #fff;
             box-shadow: 0px 8px 15px rgba(0, 0, 0, 0.1);
             border-radius: 12px;
+            display: flex;
+    flex-direction: column;
+    gap: 20px; 
         }
 
       
@@ -146,23 +284,9 @@
           <li><a href="#Home">Home</a></li>
           <li><a href="#price">Price Predictions</a></li>
           <li><a href="#5g">5g Predictions</a></li>
-          <li class="dropdown"><a href="#"><span>Dropdown</span> <i class="bi bi-chevron-down toggle-dropdown"></i></a>
-            <ul>
-              <li><a href="#">Dropdown 1</a></li>
-              <li class="dropdown"><a href="#"><span>Deep Dropdown</span> <i class="bi bi-chevron-down toggle-dropdown"></i></a>
-                <ul>
-                  <li><a href="#">Deep Dropdown 1</a></li>
-                  <li><a href="#">Deep Dropdown 2</a></li>
-                  <li><a href="#">Deep Dropdown 3</a></li>
-                  <li><a href="#">Deep Dropdown 4</a></li>
-                  <li><a href="#">Deep Dropdown 5</a></li>
-                </ul>
-              </li>
-              <li><a href="#">Dropdown 2</a></li>
-              <li><a href="#">Dropdown 3</a></li>
-              <li><a href="#">Dropdown 4</a></li>
-            </ul>
-          </li>
+          <li><a href="#Extended-memory">Extended-memory</a></li>
+          <li><a href="#dashboard" id="showDashboard">Power BI Dashboard</a></li>
+          <li><a href="#recommendations">Recommendations</a></li>
           <li><a href="#contact">Contact</a></li>
         </ul>
         <i class="mobile-nav-toggle d-xl-none bi bi-list"></i>
@@ -398,10 +522,10 @@
         }
 
         // Subtract 2000 from the predicted price and remove decimals
-        let adjustedPrice = Math.floor(data.price - 2000);
+       // let adjustedPrice = Math.floor(data.price - 2000);
 
         // Display the adjusted price without decimals
-        document.getElementById('prediction-result').innerHTML = 'Predicted Price: ' + adjustedPrice + ' TND';
+        document.getElementById('prediction-result').innerHTML = 'Predicted Price: ' + data.price  + ' TND';
       })
       .catch(error => {
         console.error('Error:', error);
@@ -410,193 +534,6 @@
 });
 
 </script>
-
-    </section><!-- /Starter Section Section -->
-    <div class="container section-title" data-aos="fade-up">
-      <h2>Starter Section</h2>
-      <div><span>Check Our</span> <span class="description-title">Prediction 5g  based on AI Precision</span></div>
-    </div><!-- End Section Title -->
-
-    <div class="container" data-aos="fade-up" id="5g-prediction">
-      <div class="containerP">
-          <h1>5G Capability Prediction</h1>
-          <form id="predict-5g-form" novalidate>
-              <div>
-                  <label for="rating">Rating:</label>
-                  <input type="number" id="rating-5g" name="rating" placeholder="Enter Rating" required>
-                  <div id="rating-5g-error" class="error"></div>
-              </div>
-  
-              <div>
-                  <label for="ram_capacity">RAM Capacity (GB):</label>
-                  <input type="number" id="ram_capacity-5g" name="ram_capacity" placeholder="Enter RAM (e.g. 12)" required>
-                  <div id="ram-5g-error" class="error"></div>
-              </div>
-  
-              <div>
-                  <label for="resolution_height">Resolution Height (px):</label>
-                  <input type="number" id="resolution_height-5g" name="resolution_height" placeholder="Enter Resolution Height (e.g. 3216)" required>
-                  <div id="resolution-height-5g-error" class="error"></div>
-              </div>
-  
-              <div>
-                  <label for="refresh_rate">Refresh Rate (Hz):</label>
-                  <input type="number" id="refresh_rate-5g" name="refresh_rate" placeholder="Enter Refresh Rate (e.g. 120)" required>
-                  <div id="refresh-rate-5g-error" class="error"></div>
-              </div>
-  
-              <div>
-                  <label for="extended_memory_available">Extended Memory Available:</label>
-                  <input type="number" id="extended_memory_available-5g" name="extended_memory_available" placeholder="Enter 1 for Yes, 0 for No" required>
-                  <div id="extended-memory-5g-error" class="error"></div>
-              </div>
-              <button type="submit">Predict 5G Capability</button>
-          </form>
-  
-          <div id="5g-result"></div>
-
-              <!-- The 5G prediction result will appear here -->
-         
-      </div>
-  </div>
-  
-  <div class="container section-title" data-aos="fade-up">
-    <h2>Recommendation System</h2>
-    <div><span>Check our</span> <span class="description-title">Personalized Smartphone Recommendations</span></div>
-</div><!-- End Section Title -->
-<div class="container" data-aos="fade-up">
-  <div class="containerP">
-      <h1>Get Smartphone Recommendations</h1>
-      <form id="recommendation-form">
-          <div>
-              <label for="budget">Enter Your Budget (TND):</label>
-              <input type="number" id="budget" name="price" required>
-          </div>
-
-          <div>
-              <label for="preferred-brand">Preferred Brand:</label>
-              <input type="text" id="preferred-brand" name="brand_name">
-          </div>
-
-          <div>
-              <label for="ram">Preferred RAM Size (GB):</label>
-              <input type="number" id="ram" name="ram_capacity" required>
-          </div>
-
-          <div>
-              <label for="internal-memory">Preferred Internal Memory (GB):</label>
-              <input type="number" id="internal-memory" name="internal_memory">
-          </div>
-
-          <div>
-              <label for="screen-size">Preferred Screen Size (inches):</label>
-              <input type="number" id="screen-size" name="screen_size" step="0.1" required>
-          </div>
-
-          <button type="submit">Get Recommendations</button>
-      </form>
-
-      <div id="recommendations">
-          <h3>Recommended Smartphones:</h3>
-          <ul id="recommendations-list"></ul>
-      </div>
-  </div>
-</div><!-- End Container -->
-
-<script>
-  // Function to send the user input to the backend and display recommendations
-  document.getElementById("recommendation-form").addEventListener("submit", async (event) => {
-      event.preventDefault();
-
-      // Collect form data
-      const userPreference = {
-          price: document.getElementById("budget").value,
-          ram_capacity: document.getElementById("ram").value,
-          screen_size: document.getElementById("screen-size").value,
-          brand_name: document.getElementById("preferred-brand").value,
-          internal_memory: document.getElementById("internal-memory").value
-      };
-
-      // Send data to backend via API
-      const response = await fetch('http://127.0.0.1:5000/recommend', {
-          method: 'POST',
-          headers: {
-              'Content-Type': 'application/json',
-          },
-          body: JSON.stringify(userPreference)
-      });
-
-      const recommendations = await response.json();
-
-      // Display recommendations on the frontend
-      const recommendationsList = document.getElementById("recommendations-list");
-      recommendationsList.innerHTML = "";  // Clear previous recommendations
-
-      recommendations.forEach(phone => {
-          const listItem = document.createElement("li");
-          listItem.textContent = `${phone.brand_name} - Price: ${phone.price}, RAM: ${phone.ram_capacity}GB, Memory: ${phone.internal_memory}GB, Screen: ${phone.screen_size}"`;
-          recommendationsList.appendChild(listItem);
-      });
-  });
-</script>
-
-<!-- Section Title -->
-<div class="container section-title" data-aos="fade-up">
-  <h2>Starter Section</h2>
-  <div>
-    <span>Check Our</span>
-    <span class="description-title">Gaming Performance Score</span>
-  </div>
-</div><!-- End Section Title -->
-
-<!-- Form for Gaming Phone Prediction -->
-<div class="container" data-aos="fade-up" id="gaming-prediction">
-  <div class="containerP">
-    <h1>Gaming Phone Predictor</h1>
-    <form id="predictGamingForm" novalidate>
-      <!-- Rating -->
-      <div>
-        <label for="rating">Rating:</label>
-        <input type="text" id="rating" name="rating"><br><br>
-      </div>
-
-      <!-- RAM Capacity -->
-      <div>
-        <label for="ram_capacity">RAM Capacity:</label>
-        <input type="text" id="ram_capacity" name="ram_capacity"><br><br>
-      </div>
-
-      <!-- Battery Capacity -->
-      <div>
-        <label for="battery_capacity">Battery Capacity:</label>
-        <input type="text" id="battery_capacity" name="battery_capacity"><br><br>
-      </div>
-
-      <!-- Screen Size -->
-      <div>
-        <label for="screen_size">Screen Size:</label>
-        <input type="text" id="screen_size" name="screen_size"><br><br>
-      </div>
-
-      <!-- Refresh Rate -->
-      <div>
-        <label for="refresh_rate">Refresh Rate:</label>
-        <input type="text" id="refresh_rate" name="refresh_rate"><br><br>
-      </div>
-
-      <!-- Number of Cores -->
-      <div>
-        <label for="num_cores">Number of Cores:</label>
-        <input type="text" id="num_cores" name="num_cores"><br><br>
-      </div>
-
-      <button type="submit">Predict Gaming Phone</button>
-    </form>
-
-    <!-- Prediction Result -->
-    <div id="result"></div>
-  </div>
-</div><!-- End Container -->
 <!-- Updated HTML -->
 <div class="container section-title" data-aos="fade-up">
   <h2>Starter Section</h2>
@@ -607,104 +544,264 @@
 </div>
 
 <!-- Form for Prediction -->
-<div class="container" data-aos="fade-up" id="5g-prediction">
+<div class="container" data-aos="fade-up" id="Extended-memory">
   <div class="containerP">
     <h1>Extended-memory Prediction</h1>
     <form id="predict-extended_memory-form" novalidate>
       <!-- RAM Capacity -->
       <div>
-        <label for="ram_capacity">RAM Capacity (GB):</label>
-        <input type="number" id="ram_capacity" name="ram_capacity" placeholder="Enter RAM (e.g. 12)" required>
-        <div id="ram-error-ex" class="error"></div>
+          <label for="ram_capacity">RAM Capacity (GB):</label>
+          <input type="number" id="ram_capacity-ex" name="ram_capacity" placeholder="Enter RAM (e.g. 12)" required>
+          <div id="ram-error-ex" class="error"></div>
       </div>
-
+  
       <!-- Battery Capacity -->
       <div>
-        <label for="battery_capacity">Battery Capacity (mAh):</label>
-        <input type="number" id="battery_capacity" name="battery_capacity" placeholder="Enter Battery Capacity (e.g. 5000)" required>
-        <div id="battery-capacity-error-ex" class="error"></div>
+          <label for="battery_capacity">Battery Capacity (mAh):</label>
+          <input type="number" id="battery_capacity-ex" name="battery_capacity" placeholder="Enter Battery Capacity (e.g. 5000)" required>
+          <div id="battery-capacity-error-ex" class="error"></div>
       </div>
-
+  
       <!-- Internal Memory -->
       <div>
-        <label for="internal_memory">Internal Memory (GB):</label>
-        <input type="number" id="internal_memory" name="internal_memory" placeholder="Enter Internal Memory (e.g. 256)" required>
-        <div id="memory-error-ex" class="error"></div>
+          <label for="internal_memory">Internal Memory (GB):</label>
+          <input type="number" id="internal_memory-ex" name="internal_memory" placeholder="Enter Internal Memory (e.g. 256)" required>
+          <div id="memory-error-ex" class="error"></div>
       </div>
-
+  
       <!-- Processor -->
       <div>
-        <label for="processor">Processor Brand:</label>
-        <input type="text" id="processor" name="processor" placeholder="Enter Processor (e.g. Snapdragon)" required>
-        <div id="processor-error-ex" class="error"></div>
+          <label for="processor">Processor Brand:</label>
+          <input type="text" id="processor-ex" name="processor" placeholder="Enter Processor (e.g. Snapdragon)" required>
+          <div id="processor-error-ex" class="error"></div>
       </div>
-
+  
       <!-- Price -->
       <div>
-        <label for="price">Price (TND):</label>
-        <input type="number" id="price" name="price" placeholder="Enter Price (e.g. 1000)" required>
-        <div id="price-error-ex" class="error"></div>
+          <label for="price">Price (TND):</label>
+          <input type="number" id="price-ex" name="price" placeholder="Enter Price (e.g. 1000)" required>
+          <div id="price-error-ex" class="error"></div>
       </div>
-
+  
       <button type="submit">Predict extended_memory_available</button>
-    </form>
+  </form>
+  
 
     <!-- Prediction Result -->
     <div id="extended-memory-result"></div>
   </div>
 </div>
 
+    </section><!-- /Starter Section Section -->
+    <div class="container section-title" data-aos="fade-up">
+      <h2>Starter Section</h2>
+      <div><span>Check Our</span> <span class="description-title">Prediction 5G Based on AI Precision</span></div>
+    </div><!-- End Section Title -->
+    
+    <div class="container" data-aos="fade-up" id="5g">
+      <div class="containerP">
+        <h1>5G Capability Prediction</h1>
+        <form id="predict-5g-form" novalidate>
+          <div>
+            <label for="rating">Rating:</label>
+            <input type="number" id="rating-5g" name="rating" placeholder="Enter Rating" required>
+            <div id="rating-5g-error" class="error"></div>
+          </div>
+    
+          <div>
+            <label for="ram_capacity">RAM Capacity (GB):</label>
+            <input type="number" id="ram_capacity-5g" name="ram_capacity" placeholder="Enter RAM (e.g. 12)" required>
+            <div id="ram-5g-error" class="error"></div>
+          </div>
+    
+          <div>
+            <label for="resolution_height">Resolution Height (px):</label>
+            <input type="number" id="resolution_height-5g" name="resolution_height" placeholder="Enter Resolution Height (e.g. 3216)" required>
+            <div id="resolution-height-5g-error" class="error"></div>
+          </div>
+    
+          <div>
+            <label for="refresh_rate">Refresh Rate (Hz):</label>
+            <input type="number" id="refresh_rate-5g" name="refresh_rate" placeholder="Enter Refresh Rate (e.g. 120)" required>
+            <div id="refresh-rate-5g-error" class="error"></div>
+          </div>
+    
+          <div>
+            <label for="extended_memory_available">Extended Memory Available:</label>
+            <input type="number" id="extended_memory_available-5g" name="extended_memory_available" placeholder="Enter 1 for Yes, 0 for No" required>
+            <div id="extended-memory-5g-error" class="error"></div>
+          </div>
+          
+          <button type="submit">Predict 5G Capability</button>
+        </form>
+    
+        <div id="5g-result">
+          <!-- The 5G prediction result will appear here -->
+        </div>
+      </div>
+    </div>
+    
+    <script>
+    document.getElementById('predict-5g-form').addEventListener('submit', function(event) {
+      event.preventDefault();  // Prevent page refresh
+    
+      // Collect the form data from the input fields
+      const rating = document.getElementById('rating-5g').value;
+      const ram_capacity = document.getElementById('ram_capacity-5g').value;
+      const refresh_rate = document.getElementById('refresh_rate-5g').value;
+      const resolution_height = document.getElementById('resolution_height-5g').value;
+      const extended_memory_available = document.getElementById('extended_memory_available-5g').value;
+    
+      // Construct the query string for the GET request with only the relevant features
+      const queryString = `?rating=${rating}&ram_capacity=${ram_capacity}&refresh_rate=${refresh_rate}&resolution_height=${resolution_height}&extended_memory_available=${extended_memory_available}`;
+    
+      // Send the GET request with the query parameters
+      fetch(`/predict-has5g${queryString}`)
+        .then(response => response.json())
+        .then(data => {
+            console.log("Received data:", data);
+            if (data.prediction) {
+                const result = data.prediction === "5G" 
+                    ? "This phone has 5G!" 
+                    : "This phone does not have 5G.";
+                document.getElementById('5g-result').innerHTML = `<strong style="font-size: 24px; color: green;">${result}</strong>`;
+            } else {
+                console.error('Error: No prediction in response', data);
+            }
+        })
+        .catch(error => console.error('Error:', error));
+    });
+    </script>
+    
+  
+  
+  
+  <div class="container section-title" data-aos="fade-up">
+    <h2>Recommendation System</h2>
+    <div><span>Check our</span> <span class="description-title">Personalized Smartphone Recommendations</span></div>
+</div><!-- End Section Title -->
+<div class="container" data-aos="fade-up" id="recommendations">
+  <div class="containerP">
+      <h1>Get Smartphone Recommendations</h1>
+      <form id="recommendation-form" novalidate>
+      
+          <div>
+              <label for="budget">Enter Your Budget (TND):</label>
+              <input type="number" id="budget" name="price"  placeholder="Enter Your Budget: e.g. 2000TND" required>
+          </div>
+
+
+          <div>
+              <label for="ram">Preferred RAM Size (GB):</label>
+              <input type="number" id="ram" name="ram_capacity" placeholder="Enter RAM Size: e.g. 8GB" required>
+          </div>
+
+          <div>
+              <label for="internal-memory">Preferred Internal Memory (GB):</label>
+              <input type="number" id="internal-mem" name="internal_memory" placeholder="Enter Internal Memory: e.g. 128GB" required>
+          </div>
+
+          <div>
+              <label for="screen-size">Preferred Screen Size (inches):</label>
+              <input type="number" id="screen-size" name="screen_size" step="0.1" placeholder="Enter Screen Size: e.g. 6.5 inches" required>
+          </div>
+
+          <button >Get Recommendations</button>
+        </form>
+
+        <div id="recommendations" class="recommendations-container">
+          <h3>Recommended Smartphones:</h3>
+          <ul id="recommendations-list" class="recommendations-list"></ul>
+        </div>
+        
+  </div>
+</div><!-- End Container -->
+<script>
+ document.getElementById("recommendation-form").addEventListener("submit", async function (event) {
+  event.preventDefault(); // Prevent form from submitting traditionally
+
+  // Gather form data
+  const formData = new FormData(event.target);
+  const formDataObject = Object.fromEntries(formData.entries());
+
+  // Send data to the endpoint
+  try {
+    const response = await fetch("/recommendations", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(formDataObject),
+    });
+
+    if (!response.ok) throw new Error("Failed to fetch recommendations");
+
+    const recommendations = await response.json();
+
+    // Update the recommendations list in the UI
+    const recommendationsList = document.getElementById("recommendations-list");
+    recommendationsList.innerHTML = ""; // Clear any existing content
+
+    if (recommendations.length === 0) {
+      recommendationsList.innerHTML = "<li>No smartphones match your criteria.</li>";
+    } else {
+      recommendations.forEach((phone) => {
+        // Create a new list item for each phone recommendation
+        const listItem = document.createElement("li");
+
+        // Create a container for phone details (brand, model, specs)
+        const phoneInfo = document.createElement("div");
+        phoneInfo.classList.add("phone-info");
+        phoneInfo.innerHTML = `
+          <strong>${phone.rank}. ${phone.brand_name} ${phone.model}</strong><br>
+          RAM: ${phone.ram_capacity} GB | Internal Memory: ${phone.internal_memory} GB | Screen Size: ${phone.screen_size} inches
+        `;
+
+        // Create a container for the phone price
+        const phonePrice = document.createElement("div");
+        phonePrice.classList.add("phone-price");
+        phonePrice.textContent = `${phone.price} TND`;
+
+        // Create a rank badge
+        const phoneRank = document.createElement("div");
+        phoneRank.classList.add("phone-rank");
+        phoneRank.textContent = `#${phone.rank}`;
+
+        // Append the elements to the list item
+        listItem.appendChild(phoneRank);
+        listItem.appendChild(phoneInfo);
+        listItem.appendChild(phonePrice);
+
+        // Add the list item to the recommendations list
+        recommendationsList.appendChild(listItem);
+      });
+    }
+
+  } catch (error) {
+    console.error("Error fetching recommendations:", error);
+    alert("An error occurred while fetching recommendations. Please try again later.");
+  }
+});
+
+</script>
+
 <!-- Updated JavaScript -->
 <script>
-document.getElementById("predict-extended-memory-form").addEventListener("submit", async function (event) {
-    event.preventDefault();
-    console.log("Form submission prevented!");
-    // Clear previous errors
-    document.querySelectorAll(".error").forEach(el => el.textContent = "");
+ document.getElementById("predict-extended_memory-form").addEventListener("submit", async function (event) {
+    event.preventDefault();  // Prevent the default form submission (refresh)
 
-    // Retrieve form inputs
-    const ramCapacity = document.getElementById("ram_capacity").value;
-    const batteryCapacity = document.getElementById("battery_capacity").value;
-    const internalMemory = document.getElementById("internal_memory").value;
-    const processorBrand = document.getElementById("processor_brand").value;
-    const price = document.getElementById("price").value;
-
-    // Validate inputs
-    let isValid = true;
-
-    if (!ramCapacity || ramCapacity <= 0) {
-        document.getElementById("ram-error").textContent = "Please enter a valid RAM capacity.";
-        isValid = false;
-    }
-
-    if (!batteryCapacity || batteryCapacity <= 0) {
-        document.getElementById("battery-error").textContent = "Please enter a valid battery capacity.";
-        isValid = false;
-    }
-
-    if (!internalMemory || internalMemory <= 0) {
-        document.getElementById("memory-error").textContent = "Please enter a valid internal memory.";
-        isValid = false;
-    }
-
-    if (!processorBrand || processorBrand.trim() === "") {
-        document.getElementById("processor-error").textContent = "Please enter a processor brand.";
-        isValid = false;
-    }
-
-    if (!price || price <= 0) {
-        document.getElementById("price-error").textContent = "Please enter a valid price.";
-        isValid = false;
-    }
-
-    if (!isValid) return;
+    const ramCapacity = document.getElementById("ram_capacity-ex").value;
+const batteryCapacity = document.getElementById("battery_capacity-ex").value;
+const internalMemory = document.getElementById("internal_memory-ex").value;
+const processorBrand = document.getElementById("processor-ex").value;  // Make sure this matches the input field id
+const price = document.getElementById("price-ex").value;
 
     // Prepare form data
     const formData = new FormData();
     formData.append("ram_capacity", ramCapacity);
     formData.append("battery_capacity", batteryCapacity);
     formData.append("internal_memory", internalMemory);
-    formData.append("processor_brand", processorBrand);
+    formData.append("processor_brand", processorBrand);  // This should match the input name
     formData.append("price", price);
 
     try {
@@ -720,15 +817,64 @@ document.getElementById("predict-extended-memory-form").addEventListener("submit
             document.getElementById("extended-memory-result").textContent =
                 `Prediction: ${result.extended_memory_available ? "Yes" : "No"}`;
         } else {
-            console.error('API Error:', result.error);  // Log error to console
             document.getElementById("extended-memory-result").textContent = `Error: ${result.error}`;
         }
     } catch (error) {
-        console.error('Request Error:', error);  // Log request error to console
         document.getElementById("extended-memory-result").textContent = `Error: ${error.message}`;
     }
 });
 
+</script>
+<div class="container section-title" data-aos="fade-up">
+  <h2>Dashboard PowerBi</h2>
+  <div>
+      <span>Check our</span> <span class="description-title">Dashboard Power Bi</span>
+  </div>
+</div>
+<!-- End Section Title -->
+
+<!-- Div where the iframe will be displayed -->
+<div id="dashboard" style="display:none;" class="dashboard-container">
+  <iframe 
+      title="Power BI Dashboard" 
+      class="dashboard-iframe" 
+      src="https://app.powerbi.com/reportEmbed?reportId=0bda156d-c988-4160-8174-9714d9eb7569&autoAuth=true&ctid=604f1a96-cbe8-43f8-abbf-f8eaf5d85730" 
+      frameborder="0" 
+      allowFullScreen="true">
+  </iframe>
+</div>
+
+<style>
+/* Make the iframe take up most of the available space */
+.dashboard-container {
+  width: 100%; /* Full width of the container */
+  height: 80vh; /* 80% of the viewport height */
+  display: flex; /* Center the iframe */
+  justify-content: center;
+  align-items: center;
+  margin-top: 20px;
+}
+
+.dashboard-iframe {
+  width: 90%; /* Adjust width to fit the container */
+  height: 100%; /* Take the full height of the container */
+  border: none; /* Remove border */
+  border-radius: 8px; /* Optional: Add rounded corners */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Optional: Add shadow for better visuals */
+}
+</style>
+
+<script>
+  // JavaScript to toggle the visibility of the dashboard
+  document.getElementById('showDashboard').addEventListener('click', function(event) {
+      event.preventDefault(); // Prevent the default link action
+      var dashboard = document.getElementById('dashboard');
+      if (dashboard.style.display === "none") {
+          dashboard.style.display = "flex"; // Show the dashboard with flexbox
+      } else {
+          dashboard.style.display = "none"; // Hide the dashboard
+      }
+  });
 </script>
 
   </main>
@@ -877,41 +1023,6 @@ document.getElementById("predict-extended-memory-form").addEventListener("submit
             });
         }
     });
-</script>
-
-<script>
-  document.getElementById('predictGamingForm').addEventListener('submit', function(event) {
-    event.preventDefault();
-    
-    let formData = new FormData(this);
-
-    fetch('/predict_gaming_phone', {
-        method: 'POST',
-        body: formData
-    })
-    .then(response => response.json())
-    .then(data => {
-        // Debug: Check the data returned by the server
-        console.log(data);
-
-        if (data.error) {
-            document.getElementById('result').textContent = 'Error: ' + data.error;
-        } else {
-            // Ensure that the gaming score and the phone status are present
-            if (data.gaming_score !== undefined && data.is_gaming_phone !== undefined) {
-                document.getElementById('result').innerHTML = `
-                    <p>Gaming Score: ${data.gaming_score}</p>
-                    <p>This phone ${data.is_gaming_phone ? 'is' : 'is not'} a gaming phone.</p>
-                `;
-            } else {
-                document.getElementById('result').textContent = 'Error: Invalid response from server';
-            }
-        }
-    })
-    .catch(error => {
-        document.getElementById('result').textContent = 'Error: ' + error;
-    });
-});
 </script>
 
 </body>
