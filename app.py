@@ -23,16 +23,17 @@ VALID_USERNAME = 'ayoubtoujani'
 VALID_PASSWORD = '123'
 
 
-# Load the pre-trained XGBoost model
+
 with open("model/xgboost_5g_model.pkl", "rb") as model_file:
     modelfiveg = pickle.load(model_file)
-
 # Load the pre-trained model
 model = joblib.load('model/smartphone_price_model_new_last.pkl')
+model_extended_memory = joblib.load('model/random_forest_classifier_last.pkl')
 
-# Charger le modèle et l'encodeur
-model_extended_memory = joblib.load('model/random_forest_model.pkl')
-encoder = joblib.load('model/encoder.pkl')
+
+encoder_brand = joblib.load('model/label_encoder_brand_name.pkl')
+
+encoder_os = joblib.load('model/label_encoder_os.pkl')
 @app.route('/login', methods=['GET', 'POST'])  # Handle both GET and POST
 def login():
     if request.method == 'POST':
@@ -204,31 +205,30 @@ def get_recommendations():
     # Return the ranked list as a JSON response
     return jsonify(ranked_smartphones)
 
-
 @app.route('/predict-extended-memory', methods=['POST'])
 def predict_extended_memory():
     try:
         # Retrieve and validate input data
-        ram_capacity = request.form.get("ram_capacity", type=float)
-        battery_capacity = request.form.get("battery_capacity", type=float)
         internal_memory = request.form.get("internal_memory", type=float)
-        processor_brand = request.form.get("processor_brand", type=str)
-        price = request.form.get("price", type=float)
+        brand_name = request.form.get("brand_name", type=str)
+        os = request.form.get("os", type=str)
+        ram_capacity = request.form.get("ram_capacity", type=float)
 
-        print(f"Received data: {ram_capacity}, {battery_capacity}, {internal_memory}, {processor_brand}, {price}")
+        print(f"Received data: internal_memory={internal_memory}, brand_name={brand_name}, os={os}, ram_capacity={ram_capacity}")
 
-        if None in [ram_capacity, battery_capacity, internal_memory, processor_brand, price]:
+        if None in [internal_memory, brand_name, os, ram_capacity]:
             return jsonify({"error": "All input fields must be provided and valid."}), 400
 
-        # Encode the processor brand
+        # Encode categorical features
         try:
-            processor_encoded = encoder.transform([processor_brand])[0]
+            brand_encoded = encoder_brand.transform([brand_name])[0]
+            os_encoded = encoder_os.transform([os])[0]
         except Exception as e:
-            print(f"Error in encoding processor brand: {e}")  # Log the error
-            return jsonify({"error": f"Processor brand encoding failed: {str(e)}"}), 400
+            print(f"Error in encoding categorical features: {e}")
+            return jsonify({"error": f"Encoding failed: {str(e)}"}), 400
 
         # Create feature array
-        features = np.array([[price, ram_capacity, internal_memory, battery_capacity, processor_encoded]])
+        features = np.array([[internal_memory, brand_encoded, os_encoded, ram_capacity]])
 
         # Make prediction
         prediction = model_extended_memory.predict(features)
@@ -237,8 +237,7 @@ def predict_extended_memory():
         return jsonify({"extended_memory_available": prediction_bool})
 
     except Exception as e:
-        # Log and handle exceptions
-        print(f"Prediction request failed: {e}")  # Log the error
+        print(f"Prediction request failed: {e}")
         return jsonify({"error": f"Prediction failed: {str(e)}"}), 500
     
 @app.route('/predict-has5g', methods=['GET'])
@@ -281,28 +280,6 @@ def predict_price(features):
     # Example: weights for demo purposes
     weights = [200, 0.8, 1.5, 1.2, 0.5, 0.3]
     return np.dot(features, weights) + 50
-
-@app.route('/predict-preview', methods=['POST'])
-def predict_preview():
-    try:
-        brand = request.form.get('brand_name', '')
-        rating = float(request.form.get('rating', 0))
-        ram = float(request.form.get('ram_capacity', 0))
-        internal_memory = float(request.form.get('internal_memory', 0))
-        resolution_height = float(request.form.get('resolution_height', 0))
-        resolution_width = float(request.form.get('resolution_width', 0))
-        refresh_rate = float(request.form.get('refresh_rate', 0))
-        battery_capacity = float(request.form.get('battery_capacity', 0))
-
-        # Compute derived features (example: PPI)
-        ppi = ((resolution_width ** 2 + resolution_height ** 2) ** 0.5) / 6.5  # Assuming a 6.5" display
-
-        features = [rating, ram, internal_memory, ppi, refresh_rate, battery_capacity]
-        price = predict_price(features)
-        
-        return jsonify({"price": round(price, 2)})
-    except Exception as e:
-        return jsonify({"error": str(e)}), 400
 
 
 # Run the app

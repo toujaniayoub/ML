@@ -574,8 +574,7 @@ button:hover {
     }
   });
 </script>
-
-<!-- Updated HTML -->
+<!-- Starter Section Title -->
 <div class="container section-title" data-aos="fade-up">
   <h2>Starter Section</h2>
   <div>
@@ -589,49 +588,155 @@ button:hover {
   <div class="containerP">
     <h1>Extended-memory Prediction</h1>
     <form id="predict-extended_memory-form" novalidate>
+      <!-- Brand Name -->
+      <div>
+        <label for="brand_name">Brand Name:</label>
+        <select id="brand_name" name="brand_name" required style="width: 100%; padding: 12px; font-size: 1rem; border: 1px solid #ccc; border-radius: 8px; transition: border 0.3s ease;">
+          <option value="" disabled selected>Select a Brand</option>
+          <option value="apple">Apple</option>
+          <option value="asus">Asus</option>
+          <option value="blackview">Blackview</option>
+          <option value="blu">Blu</option>
+          <option value="cat">Cat</option>
+          <option value="cola">Cola</option>
+          <option value="doogee">Doogee</option>
+          <option value="duoqin">Duoqin</option>
+          <option value="gionee">Gionee</option>
+          <option value="google">Google</option>
+          <option value="honor">Honor</option>
+          <option value="huawei">Huawei</option>
+          <option value="ikall">iKall</option>
+          <option value="infinix">Infinix</option>
+          <option value="iqoo">IQOO</option>
+          <option value="itel">Itel</option>
+          <option value="jio">Jio</option>
+          <option value="lava">Lava</option>
+          <option value="leeco">LeEco</option>
+          <option value="leitz">Leitz</option>
+          <option value="lenovo">Lenovo</option>
+          <option value="letv">Letv</option>
+          <option value="lg">LG</option>
+          <option value="lyf">LYF</option>
+          <option value="micromax">Micromax</option>
+          <option value="motorola">Motorola</option>
+          <option value="nokia">Nokia</option>
+          <option value="nothing">Nothing</option>
+          <option value="nubia">Nubia</option>
+          <option value="oneplus">OnePlus</option>
+          <option value="oppo">Oppo</option>
+          <option value="oukitel">Oukitel</option>
+          <option value="poco">Poco</option>
+          <option value="realme">Realme</option>
+          <option value="redmi">Redmi</option>
+          <option value="royole">Royole</option>
+          <option value="samsung">Samsung</option>
+          <option value="sharp">Sharp</option>
+          <option value="sony">Sony</option>
+          <option value="tcl">TCL</option>
+          <option value="tecno">Tecno</option>
+          <option value="tesla">Tesla</option>
+          <option value="vertu">Vertu</option>
+          <option value="vivo">Vivo</option>
+          <option value="xiaomi">Xiaomi</option>
+          <option value="zte">ZTE</option>
+        </select>
+        <div id="brand-error" class="error"></div>
+      </div>
+
+      <!-- Operating System -->
+      <div>
+        <label for="os">Operating System:</label>
+        <select id="os" name="os" required style="width: 100%; padding: 12px; font-size: 1rem; border: 1px solid #ccc; border-radius: 8px; transition: border 0.3s ease;">
+          <option value="" disabled selected>Select an OS</option>
+          <option value="android">Android</option>
+          <option value="ios">iOS</option>
+        </select>
+        <div id="os-error" class="error"></div>
+      </div>
+
       <!-- RAM Capacity -->
       <div>
-          <label for="ram_capacity">RAM Capacity (GB):</label>
-          <input type="number" id="ram_capacity-ex" name="ram_capacity" placeholder="Enter RAM (e.g. 12)" required>
-          <div id="ram-error-ex" class="error"></div>
+        <label for="ram_capacity">RAM Capacity (GB):</label>
+        <input type="number" id="ram_capacity" name="ram_capacity" placeholder="Enter RAM (e.g. 8)" required>
+        <div id="ram-error" class="error"></div>
       </div>
-  
-      <!-- Battery Capacity -->
-      <div>
-          <label for="battery_capacity">Battery Capacity (mAh):</label>
-          <input type="number" id="battery_capacity-ex" name="battery_capacity" placeholder="Enter Battery Capacity (e.g. 5000)" required>
-          <div id="battery-capacity-error-ex" class="error"></div>
-      </div>
-  
+
       <!-- Internal Memory -->
       <div>
-          <label for="internal_memory">Internal Memory (GB):</label>
-          <input type="number" id="internal_memory-ex" name="internal_memory" placeholder="Enter Internal Memory (e.g. 256)" required>
-          <div id="memory-error-ex" class="error"></div>
+        <label for="internal_memory">Internal Memory (GB):</label>
+        <input type="number" id="internal_memory" name="internal_memory" placeholder="Enter Internal Memory (e.g. 128)" required>
+        <div id="memory-error" class="error"></div>
       </div>
-  
-      <!-- Processor -->
-      <div>
-          <label for="processor">Processor Brand:</label>
-          <input type="text" id="processor-ex" name="processor" placeholder="Enter Processor (e.g. Snapdragon)" required>
-          <div id="processor-error-ex" class="error"></div>
-      </div>
-  
-      <!-- Price -->
-      <div>
-          <label for="price">Price (TND):</label>
-          <input type="number" id="price-ex" name="price" placeholder="Enter Price (e.g. 1000)" required>
-          <div id="price-error-ex" class="error"></div>
-      </div>
-  
+
+      <!-- Submit Button -->
       <button type="submit">Predict extended_memory_available</button>
-  </form>
-  
+    </form>
 
     <!-- Prediction Result -->
     <div id="extended-memory-result"></div>
   </div>
 </div>
+
+<script>
+ document.getElementById('predict-extended_memory-form').addEventListener('submit', async function(event) {
+  event.preventDefault();
+
+  const resultDiv = document.getElementById('extended-memory-result');
+  resultDiv.className = ''; // Reset any existing classes
+
+  const formData = new FormData(this);
+
+  // Ensure all inputs are in lowercase
+  formData.set('brand_name', formData.get('brand_name').toLowerCase());
+  formData.set('os', formData.get('os').toLowerCase());
+
+  try {
+    const response = await fetch('/predict-extended-memory', {
+      method: 'POST',
+      body: formData,
+    });
+
+    if (!response.ok) {
+      const errorData = await response.json();
+      resultDiv.textContent = `Error: ${errorData.error}`;
+      resultDiv.classList.add('error');
+      return;
+    }
+
+    const result = await response.json();
+    resultDiv.textContent = `Prediction: ${result.extended_memory_available ? 'Yes' : 'No'}`;
+    resultDiv.classList.add(result.extended_memory_available ? 'success' : 'error');
+  } catch (error) {
+    resultDiv.textContent = `Error: ${error.message}`;
+    resultDiv.classList.add('error');
+  }
+});
+
+</script>
+
+<style>
+  
+  #extended-memory-result {
+    margin-top: 15px;
+    padding: 10px;
+    font-size: 1.2rem;
+    text-align: center;
+    border-radius: 5px;
+    transition: background-color 0.3s, color 0.3s;
+  }
+  .success {
+    background-color: #d4edda;
+    color: #155724;
+    border: 1px solid #c3e6cb;
+  }
+  .error {
+    background-color: #f8d7da;
+    color: #721c24;
+    border: 1px solid #f5c6cb;
+  }
+
+
+</style>
 
     </section><!-- /Starter Section Section -->
     <div class="container section-title" data-aos="fade-up">
@@ -826,46 +931,6 @@ button:hover {
 
 </script>
 
-<!-- Updated JavaScript -->
-<script>
- document.getElementById("predict-extended_memory-form").addEventListener("submit", async function (event) {
-    event.preventDefault();  // Prevent the default form submission (refresh)
-
-    const ramCapacity = document.getElementById("ram_capacity-ex").value;
-const batteryCapacity = document.getElementById("battery_capacity-ex").value;
-const internalMemory = document.getElementById("internal_memory-ex").value;
-const processorBrand = document.getElementById("processor-ex").value;  // Make sure this matches the input field id
-const price = document.getElementById("price-ex").value;
-
-    // Prepare form data
-    const formData = new FormData();
-    formData.append("ram_capacity", ramCapacity);
-    formData.append("battery_capacity", batteryCapacity);
-    formData.append("internal_memory", internalMemory);
-    formData.append("processor_brand", processorBrand);  // This should match the input name
-    formData.append("price", price);
-
-    try {
-        // Call API
-        const response = await fetch("/predict-extended-memory", {
-            method: "POST",
-            body: formData,
-        });
-
-        const result = await response.json();
-
-        if (response.ok) {
-            document.getElementById("extended-memory-result").textContent =
-                `Prediction: ${result.extended_memory_available ? "Yes" : "No"}`;
-        } else {
-            document.getElementById("extended-memory-result").textContent = `Error: ${result.error}`;
-        }
-    } catch (error) {
-        document.getElementById("extended-memory-result").textContent = `Error: ${error.message}`;
-    }
-});
-
-</script>
 <div class="container section-title" data-aos="fade-up">
   <h2>Dashboard PowerBi</h2>
   <div>
