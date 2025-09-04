@@ -1,6 +1,6 @@
 # 📱 SmartPredict – Machine Learning Web Application
 
-![SmartPredict Banner](./assets/banner.png)
+![SmartPredict Banner](./assets/img//testimonials/logo.png)
 
 > 🔮 *SmartPredict is a machine learning-powered web application that helps users select smartphones based on their personalized needs and predicts smartphone prices using advanced algorithms.*  
 
